@@ -1,0 +1,33 @@
+{
+    "project": {
+        "name": "json-file",
+        "version": "0.0.0"
+    },
+    "files": {
+        "src/json-file.js": {
+            "name": "src/json-file.js",
+            "modules": {
+                "JsonFile": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {
+        "JsonFile": {
+            "name": "JsonFile",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "src/json-file.js",
+            "line": 5,
+            "description": "CJS module."
+        }
+    },
+    "classes": {},
+    "classitems": [],
+    "warnings": []
+}
