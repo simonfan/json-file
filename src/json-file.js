@@ -53,7 +53,6 @@ File.prototype.readSync = function (callback) {
 
 File.prototype._processJson = function (json) {
 	this.data = JSON.parse(json);
-	this.indent = determineWhitespace(json);
 };
 
 File.prototype.write = function (first, second) {
@@ -118,23 +117,3 @@ File.prototype._resolve = function (key, callback) {
 	});
 	return callback(current, key, current[key]);
 };
-
-// ------------------------------------------------------------------
-
-var findWhitespace = /^(\s+)/;
-function determineWhitespace(contents) {
-	var whitespace = 0;
-	contents = contents.split('\n');
-	for (var i = 0, c = contents.length; i < c; i++) {
-		var match = findWhitespace.exec(contents);
-		if (match && typeof match[1] === 'string') {
-			if (match[1][0] === '\t') {
-				whitespace = '\t';
-				break;
-			} else if (match[1].length < whitespace || ! whitespace) {
-				whitespace = match[1].length;
-			}
-		}
-	}
-}
-
