@@ -102,13 +102,13 @@ var fs    = require(&#x27;fs&#x27;);
 var path  = require(&#x27;path&#x27;);
 var _ = require(&#x27;lodash&#x27;);
 
-var File = exports.File = function(filePath) {
+var File = exports.File = function (filePath, options) {
 	this.indent  = null;
 	this.data    = void(0);
 	this.path    = path.normalize(filePath);
 };
 
-exports.read = function(filePath, callback) {
+exports.read = function (filePath, callback) {
 	var file = new File(filePath);
 	if (callback) {
 		file.read(callback);
@@ -121,11 +121,11 @@ exports.read = function(filePath, callback) {
 // ------------------------------------------------------------------
 //  File I/O
 
-File.prototype.read = function(callback) {
+File.prototype.read = function (callback) {
 	fs.readFile(this.path, &#x27;utf8&#x27;, this._afterRead.bind(this, callback));
 };
 
-File.prototype._afterRead = function(callback, err, json) {
+File.prototype._afterRead = function (callback, err, json) {
 	if (err) {
 		return callback(err);
 	}
@@ -133,49 +133,61 @@ File.prototype._afterRead = function(callback, err, json) {
 	callback();
 };
 
-File.prototype.readSync = function(callback) {
+File.prototype.readSync = function (callback) {
 	this._processJson(
 		fs.readFileSync(this.path, &#x27;utf8&#x27;)
 	);
 };
 
-File.prototype._processJson = function(json) {
+File.prototype._processJson = function (json) {
 	this.data = JSON.parse(json);
-	this.indent = determineWhitespace(json);
 };
 
-File.prototype.write = function(replacer, space, callback) {
-	var space = space || this.indent,
-		json = JSON.stringify(this.data, replacer, space);
+File.prototype.write = function (first, second) {
+
+	var firstIsFunction = _.isFunction(first),
+		options = firstIsFunction ? {} : first,
+		callback = firstIsFunction ? first : second;
+
+	var space = options.space || this.indent,
+		replacer = options.replacer || this.replacer;
+
+	var json = JSON.stringify(this.data, replacer, space);
+
 	fs.writeFile(this.path, json, callback);
 };
 
-File.prototype.writeSync = function(replacer, space) {
-	var space = space || this.indent,
-		json = JSON.stringify(this.data, replacer, space);
+File.prototype.writeSync = function (options) {
+	options = options || {};
+
+	var space = options.space || this.indent,
+		replacer = options.replacer || this.replacer;
+
+	var json = JSON.stringify(this.data, replacer, space);
+
 	fs.writeFileSync(this.path, json);
 };
 
 // ------------------------------------------------------------------
 //  Property editing
 
-File.prototype.get = function(key) {
-	return this._resolve(key, function(scope, key, value) {
+File.prototype.get = function (key) {
+	return this._resolve(key, function (scope, key, value) {
 		return value;
 	});
 };
 
-File.prototype.set = function(key, value) {
+File.prototype.set = function (key, value) {
 
 	if (typeof key === &#x27;object&#x27;) {
 		// loop through keys
-		_.each(key, function (value, key) {
+		_.each(key, function  (value, key) {
 			this.set(key, value);
 		}.bind(this));
 
 	} else {
 		// effectively set
-		this._resolve(key, function(scope, key) {
+		this._resolve(key, function (scope, key) {
 			scope[key] = value;
 		});
 	}
@@ -184,35 +196,15 @@ File.prototype.set = function(key, value) {
 };
 
 // Has a callback, but is NOT async
-File.prototype._resolve = function(key, callback) {
+File.prototype._resolve = function (key, callback) {
 	var current = this.data;
 	var keys = key.split(&#x27;.&#x27;);
 	key = keys.pop();
-	keys.forEach(function(key) {
+	keys.forEach(function (key) {
 		current = current[key];
 	});
 	return callback(current, key, current[key]);
 };
-
-// ------------------------------------------------------------------
-
-var findWhitespace = /^(\s+)/;
-function determineWhitespace(contents) {
-	var whitespace = 0;
-	contents = contents.split(&#x27;\n&#x27;);
-	for (var i = 0, c = contents.length; i &lt; c; i++) {
-		var match = findWhitespace.exec(contents);
-		if (match &amp;&amp; typeof match[1] === &#x27;string&#x27;) {
-			if (match[1][0] === &#x27;\t&#x27;) {
-				whitespace = &#x27;\t&#x27;;
-				break;
-			} else if (match[1].length &lt; whitespace || ! whitespace) {
-				whitespace = match[1].length;
-			}
-		}
-	}
-}
-
 
     </pre>
 </div>
