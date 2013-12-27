@@ -1,119 +1,64 @@
-//     JsonFile
+//     jsonfile
 //     (c)
-//     JsonFile is licensed under the MIT terms.
+//     jsonfile is licensed under the MIT terms.
 
 /**
  * CJS module.
  *
- * @module JsonFile
+ * @module jsonfile
  */
 
 'use strict';
 
-var fs    = require('fs');
-var path  = require('path');
-var _ = require('lodash');
+var file = require('file-object'),
+	_ = require('lodash');
 
-var File = exports.File = function (filePath, options) {
-	this.indent  = null;
-	this.data    = void(0);
-	this.path    = path.normalize(filePath);
-};
+var jsonfile = module.exports = file.extend(function jsonfile(fpath, options) {
+	file.prototype.initialize.apply(this, arguments);
 
-exports.read = function (filePath, callback) {
-	var file = new File(filePath);
-	if (callback) {
-		file.read(callback);
-	} else {
-		file.readSync();
-	}
-	return file;
-};
-
-// ------------------------------------------------------------------
-//  File I/O
-
-File.prototype.read = function (callback) {
-	fs.readFile(this.path, 'utf8', this._afterRead.bind(this, callback));
-};
-
-File.prototype._afterRead = function (callback, err, json) {
-	if (err) {
-		return callback(err);
-	}
-	this._processJson(json);
-	callback();
-};
-
-File.prototype.readSync = function (callback) {
-	this._processJson(
-		fs.readFileSync(this.path, 'utf8')
-	);
-};
-
-File.prototype._processJson = function (json) {
-	this.data = JSON.parse(json);
-};
-
-File.prototype.write = function (first, second) {
-
-	var firstIsFunction = _.isFunction(first),
-		options = firstIsFunction ? {} : first,
-		callback = firstIsFunction ? first : second;
-
-	var space = options.space || this.indent,
-		replacer = options.replacer || this.replacer;
-
-	var json = JSON.stringify(this.data, replacer, space);
-
-	fs.writeFile(this.path, json, callback);
-};
-
-File.prototype.writeSync = function (options) {
 	options = options || {};
 
-	var space = options.space || this.indent,
-		replacer = options.replacer || this.replacer;
+	this.replacer = options.replacer || this.replacer;
+	this.space = options.space || this.space;
+});
 
-	var json = JSON.stringify(this.data, replacer, space);
+/**
+ * Define proto properties.
+ */
+jsonfile.proto({
+	parse: JSON.parse,
 
-	fs.writeFileSync(this.path, json);
-};
+	defaultValue: {},
 
-// ------------------------------------------------------------------
-//  Property editing
+	replacer: null,
+	space: '\t',
+	stringify: function stringifyJSON(data) {
+		return JSON.stringify(data, this.replacer, this.space);
+	},
 
-File.prototype.get = function (key) {
-	return this._resolve(key, function (scope, key, value) {
-		return value;
-	});
-};
+	/**
+	 * Set data.
+	 * @method set
+	 */
+	set: function set(first, second) {
 
-File.prototype.set = function (key, value) {
+		if (arguments.length === 2) {
 
-	if (typeof key === 'object') {
-		// loop through keys
-		_.each(key, function  (value, key) {
-			this.set(key, value);
-		}.bind(this));
+			if (typeof this.parsedData === 'undefined') {
+				this.parsedData = _.clone(this.defaultValue);
+			}
 
-	} else {
-		// effectively set
-		this._resolve(key, function (scope, key) {
-			scope[key] = value;
-		});
+			this.parsedData[first] = second;
+		} else {
+			_.each(first, function (value, key) {
+				this.set(key, value);
+			}.bind(this));
+		}
+
+		return this;
+	},
+
+	get: function get(key) {
+		return this.data()[key];
 	}
-
-	return this;
-};
-
-// Has a callback, but is NOT async
-File.prototype._resolve = function (key, callback) {
-	var current = this.data;
-	var keys = key.split('.');
-	key = keys.pop();
-	keys.forEach(function (key) {
-		current = current[key];
-	});
-	return callback(current, key, current[key]);
-};
+});

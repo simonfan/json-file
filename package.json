@@ -1,7 +1,7 @@
 {
   "name": "json-file",
   "main": "./src/json-file",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Some module...",
   "repository": {
     "type": "git",
@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "lodash": "~2.4.1",
-    "file-object": "~0.2.0"
+    "file-object": "~0.2.1"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
