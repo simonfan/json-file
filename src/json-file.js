@@ -48,7 +48,10 @@ jsonfile.proto({
 				this.parsedData = _.clone(this.defaultValue);
 			}
 
-			this.parsedData[first] = second;
+			var data = this.data();
+
+			data[first] = second;
+
 		} else {
 			_.each(first, function (value, key) {
 				this.set(key, value);

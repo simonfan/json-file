@@ -9,41 +9,84 @@ var jsonfile = require('../src/json-file');
 
 describe('jsonfile', function () {
 
-	it('is a constructor', function () {
-		var file = jsonfile(path.join(__dirname, 'tmp/data.json'));
+	describe('basics', function () {
+		it('is a constructor', function () {
+			var file = jsonfile(path.join(__dirname, 'tmp/data.json'));
 
-		file.should.be.type('object');
+			file.should.be.type('object');
 
-		file.path.should.eql(path.join(__dirname, 'tmp/data.json'));
+			file.path.should.eql(path.join(__dirname, 'tmp/data.json'));
+		});
 	});
 
-	it('reads files', function (done) {
-		var file = jsonfile(path.join(__dirname, 'tmp/data.json'));
 
-		file.read()
-			.done(function () {
+	describe('methods', function () {
 
-				file.data().should.eql({
-					name: 'test-data',
-					lalala: 'lalala',
+		beforeEach(function () {
+			this.file = jsonfile(path.join(__dirname, 'tmp/data.json'));
+		})
+
+		it('read()', function (done) {
+			var file = this.file;
+
+			file.read()
+				.done(function () {
+
+					file.data().should.eql({
+						name: 'test-data',
+						lalala: 'lalala',
+					});
+
+					done();
 				});
+		});
 
-				done();
+		it('write()', function (done) {
+			// special write test file
+			var file = jsonfile(path.join(__dirname, 'tmp/data-temp.json'));
+
+			file.set('name', 'temporary');
+
+			file.write()
+				.done(function () {
+					file.data().should.eql({ name: 'temporary' });
+
+					fs.unlinkSync(path.join(__dirname, 'tmp/data-temp.json'));
+
+					done();
+				});
+		});
+
+		describe('get(String)', function () {
+			it('returns the value of the key', function () {
+
+				var file = this.file;
+
+				file.readSync();
+				file.get('name').should.eql('test-data');
+
 			});
-	});
+		});
 
-	it('writes files', function (done) {
-		var file = jsonfile(path.join(__dirname, 'tmp/data-temp.json'));
+		describe('set', function () {
+			it('sets data', function () {
+				var file = this.file;
 
-		file.set('name', 'temporary');
+				file.readSync();
 
-		file.write()
-			.done(function () {
-				file.data().should.eql({ name: 'temporary' });
+				// get original value
+				file.get('name').should.eql('test-data');
 
-				fs.unlinkSync(path.join(__dirname, 'tmp/data-temp.json'));
+				// set new value
+				file.set('name', 'another-name')
+					// check that the name was altered
+					.get('name').should.eql('another-name');
 
-				done();
-			});
+				// tell file to read data again
+				file.readSync();
+				file.get('name').should.eql('test-data');
+			})
+		})
+
 	});
 });

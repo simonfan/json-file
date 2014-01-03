@@ -2,12 +2,12 @@ YUI.add("yuidoc-meta", function(Y) {
    Y.YUIDoc = { meta: {
     "classes": [],
     "modules": [
-        "JsonFile"
+        "jsonfile"
     ],
     "allModules": [
         {
-            "displayName": "JsonFile",
-            "name": "JsonFile",
+            "displayName": "jsonfile",
+            "name": "jsonfile",
             "description": "CJS module."
         }
     ]

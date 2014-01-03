@@ -7,7 +7,7 @@
         "src/json-file.js": {
             "name": "src/json-file.js",
             "modules": {
-                "JsonFile": 1
+                "jsonfile": 1
             },
             "classes": {},
             "fors": {},
@@ -15,8 +15,8 @@
         }
     },
     "modules": {
-        "JsonFile": {
-            "name": "JsonFile",
+        "jsonfile": {
+            "name": "jsonfile",
             "submodules": {},
             "classes": {},
             "fors": {},
@@ -28,6 +28,28 @@
         }
     },
     "classes": {},
-    "classitems": [],
-    "warnings": []
+    "classitems": [
+        {
+            "file": "src/json-file.js",
+            "line": 25,
+            "description": "Define proto properties.",
+            "class": "",
+            "module": "jsonfile"
+        },
+        {
+            "file": "src/json-file.js",
+            "line": 39,
+            "description": "Set data.",
+            "itemtype": "method",
+            "name": "set",
+            "class": "",
+            "module": "jsonfile"
+        }
+    ],
+    "warnings": [
+        {
+            "message": "Missing item type\nDefine proto properties.",
+            "line": " src/json-file.js:25"
+        }
+    ]
 }
