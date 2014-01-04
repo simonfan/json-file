@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "lodash": "~2.4.1",
-    "file-object": "~0.3.3"
+    "file-object": "~0.4.4"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
