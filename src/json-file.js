@@ -26,6 +26,8 @@ var jsonfile = module.exports = file.extend(function jsonfile(fpath, options) {
  * Define proto properties.
  */
 jsonfile.proto({
+	extension: '.json',
+
 	parse: JSON.parse,
 
 	defaultValue: {},
