@@ -1,7 +1,7 @@
 {
   "name": "json-file",
   "main": "./src/json-file",
-  "version": "0.1.1",
+  "version": "0.1.1a",
   "description": "Some module...",
   "repository": {
     "type": "git",
@@ -9,7 +9,10 @@
   },
   "dependencies": {
     "lodash": "~2.4.1",
-    "file-object": "~0.4.4"
+    "file-object": "~0.4.6",
+    "should": "~2.1.1",
+    "mocha": "~1.15.1",
+    "grunt-contrib-jshint": "~0.7.2"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
