@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>jsonfile - json-file</title>
+    <title>src/index.js - json-file</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -86,38 +86,92 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>jsonfile Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: src/index.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+//     jsonfile
+//     (c)
+//     jsonfile is licensed under the MIT terms.
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/src_index.js.html#l5"><code>src&#x2F;index.js:5</code></a>
-        </div>
-    
+/**
+ * CJS module.
+ *
+ * @module jsonfile
+ */
 
-    
-</div>
+&#x27;use strict&#x27;;
+
+var file = require(&#x27;file-object&#x27;),
+	_ = require(&#x27;lodash&#x27;);
+
+var jsonfile = module.exports = file.extend(function jsonfile(fpath, options) {
+	file.prototype.initialize.apply(this, arguments);
+
+	options = options || {};
+
+	this.replacer = options.replacer || this.replacer;
+	this.space = options.space || this.space;
+});
 
 
 
-<div class="box intro">
-    <p>CJS module.</p>
+/**
+ * Extend the default plural functionality.
+ * OBS: has some circular dependency.
+ *
+ * @property s
+ */
+jsonfile.s = require(&#x27;./s&#x27;);
 
-</div>
 
+/**
+ * Define proto properties.
+ */
+jsonfile.proto({
+	extension: &#x27;.json&#x27;,
 
+	parse: JSON.parse,
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-    </div>
+	defaultValue: {},
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+	replacer: null,
+	space: &#x27;\t&#x27;,
+	stringify: function stringifyJSON(data) {
+		return JSON.stringify(data, this.replacer, this.space);
+	},
+
+	/**
+	 * Set data.
+	 * @method set
+	 */
+	set: function set(first, second) {
+
+		if (arguments.length === 2) {
+
+			if (typeof this.data() === &#x27;undefined&#x27;) {
+				this.data(_.clone(this.defaultValue));
+			}
+
+			var data = this.data();
+
+			data[first] = second;
+
+		} else {
+			_.each(first, function (value, key) {
+				this.set(key, value);
+			}.bind(this));
+		}
+
+		return this;
+	},
+
+	get: function get(key) {
+		return this.data()[key];
+	}
+});
+
+    </pre>
 </div>
 
                     </div>

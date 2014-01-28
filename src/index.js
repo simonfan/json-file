@@ -22,6 +22,17 @@ var jsonfile = module.exports = file.extend(function jsonfile(fpath, options) {
 	this.space = options.space || this.space;
 });
 
+
+
+/**
+ * Extend the default plural functionality.
+ * OBS: has some circular dependency.
+ *
+ * @property s
+ */
+jsonfile.s = require('./s');
+
+
 /**
  * Define proto properties.
  */
@@ -46,8 +57,8 @@ jsonfile.proto({
 
 		if (arguments.length === 2) {
 
-			if (typeof this.parsedData === 'undefined') {
-				this.parsedData = _.clone(this.defaultValue);
+			if (typeof this.data() === 'undefined') {
+				this.data(_.clone(this.defaultValue));
 			}
 
 			var data = this.data();

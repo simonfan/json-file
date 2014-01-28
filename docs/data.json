@@ -4,8 +4,17 @@
         "version": "0.0.0"
     },
     "files": {
-        "src/json-file.js": {
-            "name": "src/json-file.js",
+        "src/s/index.js": {
+            "name": "src/s/index.js",
+            "modules": {
+                "s": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/index.js": {
+            "name": "src/index.js",
             "modules": {
                 "jsonfile": 1
             },
@@ -15,6 +24,28 @@
         }
     },
     "modules": {
+        "json-file": {
+            "name": "json-file",
+            "submodules": {
+                "s": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "s": {
+            "name": "s",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "is_submodule": 1,
+            "namespaces": {},
+            "module": "json-file",
+            "namespace": "",
+            "file": "src/s/index.js",
+            "line": 1,
+            "description": "Functionalities for plural json-file"
+        },
         "jsonfile": {
             "name": "jsonfile",
             "submodules": {},
@@ -22,7 +53,7 @@
             "fors": {},
             "namespaces": {},
             "tag": "module",
-            "file": "src/json-file.js",
+            "file": "src/index.js",
             "line": 5,
             "description": "CJS module."
         }
@@ -30,15 +61,24 @@
     "classes": {},
     "classitems": [
         {
-            "file": "src/json-file.js",
-            "line": 25,
+            "file": "src/index.js",
+            "line": 27,
+            "description": "Extend the default plural functionality.\nOBS: has some circular dependency.",
+            "itemtype": "property",
+            "name": "s",
+            "class": "",
+            "module": "jsonfile"
+        },
+        {
+            "file": "src/index.js",
+            "line": 36,
             "description": "Define proto properties.",
             "class": "",
             "module": "jsonfile"
         },
         {
-            "file": "src/json-file.js",
-            "line": 39,
+            "file": "src/index.js",
+            "line": 52,
             "description": "Set data.",
             "itemtype": "method",
             "name": "set",
@@ -49,7 +89,7 @@
     "warnings": [
         {
             "message": "Missing item type\nDefine proto properties.",
-            "line": " src/json-file.js:25"
+            "line": " src/index.js:36"
         }
     ]
 }

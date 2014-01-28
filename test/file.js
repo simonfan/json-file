@@ -5,17 +5,17 @@ var path = require('path'),
 
 var should = require('should');
 
-var jsonfile = require('../src/json-file');
+var jsonfile = require('../src');
 
 describe('jsonfile', function () {
 
 	describe('basics', function () {
 		it('is a constructor', function () {
-			var file = jsonfile(path.join(__dirname, 'tmp/data.json'));
+			var file = jsonfile(path.join(__dirname, 'tmp/apple.json'));
 
 			file.should.be.type('object');
 
-			file.path.should.eql(path.join(__dirname, 'tmp/data.json'));
+			file.path.should.eql(path.join(__dirname, 'tmp/apple.json'));
 		});
 	});
 
@@ -23,7 +23,7 @@ describe('jsonfile', function () {
 	describe('methods', function () {
 
 		beforeEach(function () {
-			this.file = jsonfile(path.join(__dirname, 'tmp/data.json'));
+			this.file = jsonfile(path.join(__dirname, 'tmp/apple.json'));
 		})
 
 		it('read()', function (done) {
@@ -33,8 +33,8 @@ describe('jsonfile', function () {
 				.done(function () {
 
 					file.data().should.eql({
-						name: 'test-data',
-						lalala: 'lalala',
+						name: 'apple',
+						color: 'red',
 					});
 
 					done();
@@ -63,7 +63,7 @@ describe('jsonfile', function () {
 				var file = this.file;
 
 				file.readSync();
-				file.get('name').should.eql('test-data');
+				file.get('name').should.eql('apple');
 
 			});
 		});
@@ -75,7 +75,7 @@ describe('jsonfile', function () {
 				file.readSync();
 
 				// get original value
-				file.get('name').should.eql('test-data');
+				file.get('name').should.eql('apple');
 
 				// set new value
 				file.set('name', 'another-name')
@@ -84,7 +84,7 @@ describe('jsonfile', function () {
 
 				// tell file to read data again
 				file.readSync();
-				file.get('name').should.eql('test-data');
+				file.get('name').should.eql('apple');
 			})
 		})
 
